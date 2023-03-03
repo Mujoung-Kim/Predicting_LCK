@@ -256,3 +256,4 @@ $RECYCLE.BIN/
 # etc
 test*
 test/*
+env*
