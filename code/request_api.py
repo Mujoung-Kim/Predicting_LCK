@@ -51,37 +51,51 @@ def summoner_infomation() :
 	summoner_id, summoner_name = summoner_export(base_url, 'masterleagues')
 	puuid = {}
 
-	for i, j in zip(tqdm(summoner_id), summoner_name) :
-		url = f'{base_url}/lol/summoner/v4/summoners/{i}?api_key={riot_key}'
+	for i in range(10) :
+		url = f'{base_url}/lol/summoner/v4/summoners/{list(summoner_id)[i]}?api_key={riot_key}'
 		response = requests.get(url)
+		response_data = response.json()
+		
+		for key, value in [response_data.keys(), response_data.values()] :
+			puuid[key] = value
 
-		if response.status_code == 200 :
-			pass
-		elif response.status_code == 429 :
-			print('\napi cost full : infinite loop start')
-			print(f'loop location : {i}')
+	print(puuid)
+	# for i, j in zip(tqdm(summoner_id), summoner_name) :
+	# 	url = f'{base_url}/lol/summoner/v4/summoners/{i}?api_key={riot_key}'
+	# 	response = requests.get(url)
 
-			start_time = time.time()
+	# 	if response.status_code == 200 :
+	# 		# # puuid[response.json().keys()] = response.json().values()
+	# 		# for key, values in response.json() :
+	# 		# 	puuid[key] = values
+	# 		pass
+	# 	elif response.status_code == 429 :
+	# 		break
+	# 		print('\napi cost full : infinite loop start')
+	# 		print(f'loop location : {i}')
 
-			while True :
-				if response.status_code == 429 :
-					print('try 120 second wait time')
+	# 		start_time = time.time()
 
-					time.sleep(120)
-					response = requests.get(url)
-					print(response.status_code)
+	# 		while True :
+	# 			if response.status_code == 429 :
+	# 				print('try 120 second wait time')
 
-				elif response.status_code == 200 :
-					print(f'total wait time : {time.time() - start_time}')
-					print('recovery api cost')
-					break
+	# 				time.sleep(120)
+	# 				response = requests.get(url)
+	# 				print(response.status_code)
 
-	df_puuid = pd.DataFrame(puuid, index = [0])
-	df_puuid = df_puuid.T
-	df_puuid = df_puuid.reset_index()
-	puuid.columns = ['id', 'puuid']
+	# 			elif response.status_code == 200 :
+	# 				print(f'total wait time : {time.time() - start_time}')
+	# 				print('recovery api cost')
+	# 				break
 
-	return df_puuid
+	# print(df_puuid)
+	# df_puuid = pd.DataFrame(puuid, index = [0])
+	# df_puuid = df_puuid.T
+	# df_puuid = df_puuid.reset_index()
+	# puuid.columns = ['id', 'puuid']
+
+	# return df_puuid
 
 # 최근 5게임의 match_id 추출
 def export_five_match_id() :
